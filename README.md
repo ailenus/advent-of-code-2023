@@ -4,6 +4,8 @@ Repository for storing my solutions to [Advent of Code 2023](https://adventofcod
 
 - Language: Java
 - Version: OpenJDK 21.0.1 2023-10-17 LTS
+- IDE: IntelliJ IDEA Community Edition 2023.2.5
+- Plugins: IdeaVim, SonarLint, VSCode Keymap
 
 | Day | Part 1 time | Part 1 rank | Part 2 time | Part 2 rank |
 |:---:|:-----------:|:-----------:|:-----------:|:-----------:|
