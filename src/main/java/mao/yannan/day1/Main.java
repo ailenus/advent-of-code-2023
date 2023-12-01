@@ -23,9 +23,7 @@ public class Main {
             int count = 1;
             while ((line = reader.readLine()) != null) {
                 LOG.debug("Starting to process line {}", count);
-                Pattern pattern = Pattern.compile(
-                        "\\d|one|two|three|four|five|six|seven|eight|nine"
-                );
+                Pattern pattern = Pattern.compile("\\d|one|two|three|four|five|six|seven|eight|nine");
                 Matcher matcher = pattern.matcher(line);
                 String match;
                 int i;
@@ -35,9 +33,7 @@ public class Main {
                     i = getInt(match);
                     sum += i * 10;
                 }
-                pattern = Pattern.compile(
-                        "\\d|eno|owt|eerht|ruof|evif|xis|neves|thgie|enin"
-                );
+                pattern = Pattern.compile("\\d|eno|owt|eerht|ruof|evif|xis|neves|thgie|enin");
                 matcher = pattern.matcher(new StringBuilder(line).reverse());
                 if (matcher.find()) {
                     match = matcher.group();
