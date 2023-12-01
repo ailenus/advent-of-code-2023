@@ -5,7 +5,9 @@ Repository for storing my solutions to [Advent of Code 2023](https://adventofcod
 - Language: Java
 - Version: OpenJDK 21.0.1 2023-10-17 LTS
 - IDE: IntelliJ IDEA Community Edition 2023.2.5
-- Plugins: IdeaVim, SonarLint, VSCode Keymap
+- Plugins: [IdeaVim](https://github.com/JetBrains/ideavim),
+[SonarLint](https://plugins.jetbrains.com/plugin/7973-sonarlint),
+[VSCode Keymap](https://plugins.jetbrains.com/plugin/12062-vscode-keymap)
 
 | Day | Part 1 time | Part 1 rank | Part 2 time | Part 2 rank |
 |:---:|:-----------:|:-----------:|:-----------:|:-----------:|
