@@ -8,7 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class Main {
+public final class Main {
 
     private static final Logger LOG = LogManager.getLogger(Main.class);
 
