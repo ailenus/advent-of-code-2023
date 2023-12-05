@@ -59,24 +59,24 @@ public final class Main {
                 ranges.add(new Range(start, start + seeds.get(i + 1) - 1));
             }
             mergeRanges(ranges);
-            List<CompositeMap> maps = new ArrayList<>();
-            CompositeMap current = null;
+            List<PiecewiseRangeOperator> compositeOperators = new ArrayList<>();
+            PiecewiseRangeOperator current = null;
             while ((line = reader.readLine()) != null) {
                 if (line.isEmpty()) {
                     if (current != null) {
-                        maps.add(current);
+                        compositeOperators.add(current);
                     }
                     line = reader.readLine();
                     if (!line.isBlank()) {
-                        current = new CompositeMap();
+                        current = new PiecewiseRangeOperator();
                     }
                 } else {
                     assert current != null;
                     current.addMap(Arrays.stream(line.split("\\s+")).mapToLong(Long::parseLong).toArray());
                 }
             }
-            maps.add(current);
-            for (CompositeMap map : maps) {
+            compositeOperators.add(current);
+            for (PiecewiseRangeOperator map : compositeOperators) {
                 ranges = map.map(ranges);
             }
             LOG.info("Part 2 output: {}", ranges.getFirst().start);
@@ -132,18 +132,18 @@ public final class Main {
         }
     }
 
-    private static class CompositeMap {
+    private static class PiecewiseRangeOperator {
 
-        private final List<RangeMap> maps = new ArrayList<>();
+        private final List<RangeOperator> maps = new ArrayList<>();
 
         private void addMap(long[] fields) {
-            maps.add(new RangeMap(fields[0], fields[1], fields[2]));
+            maps.add(new RangeOperator(fields[0], fields[1], fields[2]));
         }
 
         private TreeSet<Range> map(TreeSet<Range> ranges) {
             TreeSet<Range> mappedRanges = new TreeSet<>();
             TreeSet<Range> unmappedRanges = ranges;
-            for (RangeMap map : maps) {
+            for (RangeOperator map : maps) {
                 if (unmappedRanges.isEmpty()) {
                     break;
                 }
@@ -158,12 +158,12 @@ public final class Main {
 
     }
 
-    private static class RangeMap {
+    private static class RangeOperator {
 
         private final Range domain;
         private final long imageStart;
 
-        private RangeMap(long imageStart, long domainStart, long length) {
+        private RangeOperator(long imageStart, long domainStart, long length) {
             domain = new Range(domainStart, domainStart + length - 1);
             this.imageStart = imageStart;
         }
