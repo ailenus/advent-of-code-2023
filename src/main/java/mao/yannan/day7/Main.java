@@ -21,20 +21,20 @@ public final class Main {
         String url = "src/main/resources/day7.txt";
         try (BufferedReader reader = new BufferedReader(new FileReader(url))) {
             String line;
-            Map<Hand, Integer> hands = new HashMap<>();
+            Map<Hand, Integer> handBidMap = new HashMap<>();
             while ((line = reader.readLine()) != null) {
                 String[] tokens = line.split("\\s+");
                 Hand hand = new Hand(tokens[0]);
                 int bid = Integer.parseInt(tokens[1]);
-                hands.put(hand, bid);
+                handBidMap.put(hand, bid);
             }
-            List<Hand> sortedHands = hands.keySet().stream().sorted().toList();
+            List<Hand> sortedHands = handBidMap.keySet().stream().sorted().toList();
             int total = 0;
-            int count = 1;
+            int rank = 0;
             for (Hand hand : sortedHands) {
-                LOG.debug("Hand: {} - Type: {} - Rank: {}", hand, hand.getType(), count);
-                total += hands.get(hand) * count;
-                count++;
+                rank++;
+                LOG.debug("Hand: {} - Type: {} - Rank: {}", hand, hand.type(), rank);
+                total += handBidMap.get(hand) * rank;
             }
             LOG.info("Output: {}", total);
         } catch (IOException e) {
@@ -45,33 +45,33 @@ public final class Main {
 
     private record Hand(String cards) implements Comparable<Hand> {
 
-        private HandType getType() {
-            Map<Character, Integer> multiset = cards.chars()
+        private HandType type() {
+            Map<Character, Integer> weightedCards = cards.chars()
                     .mapToObj(s -> (char) s)
                     .collect(Collectors.groupingBy(i -> i, Collectors.summingInt(i -> 1)));
-            if (multiset.containsKey('J')) {
-                int jokerCount = multiset.get('J');
-                multiset.remove('J');
-                if (multiset.isEmpty()) {
+            if (weightedCards.containsKey('J')) {
+                int jokerCount = weightedCards.get('J');
+                weightedCards.remove('J');
+                if (weightedCards.isEmpty()) {
                     return HandType.FIVE_OF_A_KIND;
                 }
-                char maxChar = Collections.max(multiset.entrySet(), Map.Entry.comparingByValue()).getKey();
-                int maxCount = multiset.get(maxChar);
-                multiset.replace(maxChar, maxCount + jokerCount);
+                char maxChar = Collections.max(weightedCards.entrySet(), Map.Entry.comparingByValue()).getKey();
+                int maxCount = weightedCards.get(maxChar);
+                weightedCards.replace(maxChar, maxCount + jokerCount);
             }
-            int maxCount = multiset.values().stream().mapToInt(i -> i).max().orElse(0);
+            int maxCount = weightedCards.values().stream().mapToInt(i -> i).max().orElse(0);
             return switch (maxCount) {
                 case 5 -> HandType.FIVE_OF_A_KIND;
                 case 4 -> HandType.FOUR_OF_A_KIND;
                 case 3 -> {
-                    if (multiset.containsValue(2)) {
+                    if (weightedCards.containsValue(2)) {
                         yield HandType.FULL_HOUSE;
                     } else {
                         yield HandType.THREE_OF_A_KIND;
                     }
                 }
                 case 2 -> {
-                    if (multiset.keySet().size() == 3) {
+                    if (weightedCards.keySet().size() == 3) {
                         yield HandType.TWO_PAIR;
                     } else {
                         yield HandType.ONE_PAIR;
@@ -81,8 +81,8 @@ public final class Main {
             };
         }
 
-        private int getTypeValue() {
-            HandType handType = getType();
+        private int typeValue() {
+            HandType handType = type();
             return switch (handType) {
                 case FIVE_OF_A_KIND -> 7;
                 case FOUR_OF_A_KIND -> 6;
@@ -94,9 +94,9 @@ public final class Main {
             };
         }
 
-        private int getCardValue(int index) {
-            char first = cards.charAt(index);
-            return switch (first) {
+        private int cardValue(int index) {
+            char card = cards.charAt(index);
+            return switch (card) {
                 case 'A', 'a' -> 13;
                 case 'K', 'k' -> 12;
                 case 'Q', 'q' -> 11;
@@ -115,33 +115,33 @@ public final class Main {
 
         @Override
         public int compareTo(Hand o) {
-            int thisTypeValue = getTypeValue();
-            int otherTypeValue = o.getTypeValue();
+            int thisTypeValue = typeValue();
+            int otherTypeValue = o.typeValue();
             if (thisTypeValue != otherTypeValue) {
                 return thisTypeValue - otherTypeValue;
             }
-            int thisFirst = getCardValue(0);
-            int otherFirst = o.getCardValue(0);
+            int thisFirst = cardValue(0);
+            int otherFirst = o.cardValue(0);
             if (thisFirst != otherFirst) {
                 return thisFirst - otherFirst;
             }
-            int thisSecond = getCardValue(1);
-            int otherSecond = o.getCardValue(1);
+            int thisSecond = cardValue(1);
+            int otherSecond = o.cardValue(1);
             if (thisSecond != otherSecond) {
                 return thisSecond - otherSecond;
             }
-            int thisThird = getCardValue(2);
-            int otherThird = o.getCardValue(2);
+            int thisThird = cardValue(2);
+            int otherThird = o.cardValue(2);
             if (thisThird != otherThird) {
                 return thisThird - otherThird;
             }
-            int thisFourth = getCardValue(3);
-            int otherFourth = o.getCardValue(3);
+            int thisFourth = cardValue(3);
+            int otherFourth = o.cardValue(3);
             if (thisFourth != otherFourth) {
                 return thisFourth - otherFourth;
             }
-            int thisFifth = getCardValue(4);
-            int otherFifth = o.getCardValue(4);
+            int thisFifth = cardValue(4);
+            int otherFifth = o.cardValue(4);
             if (thisFifth != otherFifth) {
                 return thisFifth - otherFifth;
             }
